@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MzaMall – AI Powered 3D Online Mall</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 3D Model Viewer -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff}
+header{padding:15px;background:#020617;display:flex;justify-content:space-between;align-items:center}
+nav button{margin:4px;padding:10px;background:#1e293b;color:#fff;border:none;border-radius:6px}
+nav button:hover{background:#38bdf8;color:#000}
+section{display:none;padding:20px}
+.active{display:block}
+.card{background:#020617;padding:15px;border-radius:10px;margin-bottom:15px}
+input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:6px;border:none}
+button{padding:10px;border:none;border-radius:6px;background:#38bdf8;color:#000}
+.chat{height:300px;overflow:auto;background:#020617;padding:10px;border-radius:10px}
+.chat p{margin:5px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h2>MzaMall 🛒</h2>
+<nav>
+<button onclick="show('shop')">Shop</button>
+<button onclick="show('vendor')">Vendor</button>
+<button onclick="show('ai')">AI Assistant</button>
+<button onclick="show('cart')">Cart</button>
+</nav>
+</header>
+
+<!-- SHOP -->
+<section id="shop" class="active">
+<h3>🛍️ Products</h3>
+
+<div class="card">
+<h4>Smart Watch – R999</h4>
+<model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+auto-rotate camera-controls style="width:100%;height:200px;"></model-viewer>
+<button onclick="addCart('Smart Watch',999)">Add to Cart</button>
+</div>
+
+<div class="card">
+<h4>VR Headset – R2999</h4>
+<model-viewer src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+auto-rotate camera-controls style="width:100%;height:200px;"></model-viewer>
+<button onclick="addCart('VR Headset',2999)">Add to Cart</button>
+</div>
+</section>
+
+<!-- VENDOR -->
+<section id="vendor">
+<h3>🏪 Vendor Portal</h3>
+<div class="card">
+<p>Vendors add products with payment links</p>
+<input id="vname" placeholder="Product Name">
+<input id="vprice" placeholder="Price">
+<input id="vpay" placeholder="Payment Link (PayPal / Yoco)">
+<button onclick="addVendor()">Add Product</button>
+</div>
+<div id="vendorList"></div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+<h3>🤖 AI Shopping Assistant</h3>
+<div class="chat" id="chat"></div>
+<input id="userInput" placeholder="Ask me anything...">
+<button onclick="ai()">Send</button>
+</section>
+
+<!-- CART -->
+<section id="cart">
+<h3>🧾 Cart</h3>
+<div id="cartItems"></div>
+<button onclick="checkout()">Checkout</button>
+</section>
+
+<script>
+function show(id){
+document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+renderCart();
+}
+
+// CART
+let cart = JSON.parse(localStorage.getItem("cart"))||[];
+function addCart(name,price){
+cart.push({name,price});
+localStorage.setItem("cart",JSON.stringify(cart));
+alert("Added to cart");
+}
+function renderCart(){
+let div=document.getElementById("cartItems");
+if(!div)return;
+div.innerHTML="";
+let total=0;
+cart.forEach(i=>{
+div.innerHTML+=`<p>${i.name} - R${i.price}</p>`;
+total+=i.price;
+});
+div.innerHTML+=`<h4>Total: R${total}</h4>`;
+}
+function checkout(){
+alert("Redirecting to payment. (Connect PayPal here)");
+}
+
+// VENDOR
+function addVendor(){
+let n=vname.value,p=vprice.value,l=vpay.value;
+vendorList.innerHTML+=`
+<div class="card">
+<h4>${n} - R${p}</h4>
+<a href="${l}" target="_blank">
+<button>Buy Now</button>
+</a>
+</div>`;
+}
+
+// AI
+function ai(){
+let input=userInput.value.toLowerCase();
+chat.innerHTML+=`<p><b>You:</b> ${input}</p>`;
+let reply="I can help you shop.";
+if(input.includes("price")) reply="Prices are listed under each product.";
+if(input.includes("vr")) reply="The VR Headset supports immersive shopping.";
+if(input.includes("pay")) reply="You can pay using PayPal or vendor links.";
+chat.innerHTML+=`<p><b>AI:</b> ${reply}</p>`;
+userInput.value="";
+chat.scrollTop=chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
