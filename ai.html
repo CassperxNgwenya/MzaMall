@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Assistant - MzaMall</title>
+</head>
+<body>
+
+<h2>MzaMall AI</h2>
+
+<input id="q" placeholder="Ask about products">
+<button onclick="ask()">Ask</button>
+<p id="a"></p>
+
+<script>
+function ask(){
+  let q = document.getElementById("q").value.toLowerCase();
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  let reply = "I don't know yet.";
+
+  if(q.includes("products")){
+    reply = "We have " + products.length + " products available.";
+  } else if(q.includes("price")){
+    reply = "Prices vary. Check the products page for details.";
+  } else if(q.includes("3d") || q.includes("model")){
+    reply = "All products have 3D models you can view.";
+  }
+
+  document.getElementById("a").innerText = reply;
+}
+</script>
+
+<a href="index.html">Home</a>
+
+</body>
+</html>
