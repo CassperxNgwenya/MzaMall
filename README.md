@@ -1,2 +1,0 @@
-# MzaMall
-MzaMall Web App
