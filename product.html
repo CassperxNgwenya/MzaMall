@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Products - MzaMall</title>
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
+</head>
+<body>
+
+<h2>Products</h2>
+<div id="list"></div>
+
+<h3>Cart</h3>
+<ul id="cart"></ul>
+<button onclick="checkout()">Checkout (PayPal)</button>
+
+<script>
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let cart = [];
+
+function render() {
+  let html = "";
+  products.forEach((p,i)=>{
+    html += `
+      <h4>${p.name}</h4>
+      <model-viewer src="${p.model}" auto-rotate camera-controls style="width:200px;height:200px"></model-viewer>
+      <p>Price: R${p.price}</p>
+      <button onclick="add(${i})">Add to Cart</button>
+      <hr>
+    `;
+  });
+  document.getElementById("list").innerHTML = html;
+}
+
+function add(i){
+  cart.push(products[i]);
+  document.getElementById("cart").innerHTML += `<li>${products[i].name}</li>`;
+}
+
+function checkout(){
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+  window.location.href = "https://www.paypal.com/paypalme/YOURNAME";
+}
+
+render();
+</script>
+
+<a href="index.html">Home</a>
+
+</body>
+</html>
